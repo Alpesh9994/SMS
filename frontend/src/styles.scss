@@ -1,0 +1,114 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Global styles for a modern, clean, and soothing design
+
+// Color palette
+$primary: #4f8cff; // soft blue
+$secondary: #6fd6be; // soft green
+$background: #f7fafc; // very light gray
+$text: #222b45; // dark, soft text
+$surface: #ffffff; // white cards
+$shadow: 0 2px 12px 0 rgba(80, 120, 200, 0.08);
+$border-radius: 16px;
+
+
+body {
+  background: $background;
+  color: $text;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-weight: 600;
+  color: $primary;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: color 0.2s;
+  &:hover {
+    color: $secondary;
+  }
+}
+
+.mat-raised-button, .mat-flat-button, .mat-stroked-button, .mat-button {
+  border-radius: $border-radius;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  box-shadow: $shadow;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+
+.mat-table {
+  background: $surface;
+  border-radius: $border-radius;
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid #e3e8ee;
+  border-collapse: separate;
+}
+
+.mat-header-row, .mat-row {
+  height: 56px;
+  border-bottom: 1px solid #e3e8ee;
+}
+
+.mat-header-cell, .mat-cell {
+  font-size: 1rem;
+  padding: 0 24px;
+  border-right: 1px solid #e3e8ee;
+}
+
+.mat-header-cell:last-child, .mat-cell:last-child {
+  border-right: none;
+}
+
+.mat-header-cell {
+  color: $primary;
+  font-weight: 600;
+  background: $background;
+}
+
+.mat-cell {
+  color: $text;
+}
+
+
+button, .mat-icon-button {
+  border-radius: $border-radius;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.mat-spinner {
+  margin: 40px auto;
+}
+
+// Smooth transitions for all elements
+* {
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border-radius 0.2s;
+}
+
+
+.c-field{
+  width: 100%;
+}
+
+.c-form-wrapper{
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  .c-form-inner{
+    padding: 50px;
+    background-color: $surface;
+    box-shadow: 0px 0px 16px 4px rgba($color: $primary, $alpha: 0.1);
+  }
+}

@@ -54,5 +54,7 @@ export class SubjectController {
     if (!tenantId) throw new ForbiddenException('No tenant context');
     return this.subjectService.remove(id, tenantId);
   }
+
+  
   
 }

@@ -10,6 +10,10 @@ import { RolesGuard } from './auth/roles.guard';
 import { SubjectModule } from './subject/subject.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { TeacherModule } from './teacher/teacher.module';
+import { StandardModule } from './standard/standard.module';
+import { DivisionModule } from './division/division.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -21,6 +25,10 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     AuthModule, 
     SubjectModule, 
     PrismaModule,
+    TeacherModule, 
+    StandardModule, 
+    DivisionModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [

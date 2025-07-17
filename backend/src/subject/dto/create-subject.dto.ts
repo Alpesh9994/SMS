@@ -8,6 +8,9 @@ export class CreateSubjectDto {
   @IsString()
   code?: string;
 
+  @IsOptional()
   @IsString()
-  tenantId: string;
+  description?: string;
+
+
 }

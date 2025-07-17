@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantService, PrismaService } from './tenant.service';
+import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 const mockPrismaService = {
   tenant: {

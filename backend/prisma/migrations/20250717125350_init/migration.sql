@@ -74,6 +74,7 @@ CREATE TABLE "Division" (
     "name" TEXT NOT NULL,
     "studentCapacity" INTEGER NOT NULL,
     "standardId" TEXT NOT NULL,
+    "tenantId" TEXT NOT NULL,
     "classTeacherId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -84,10 +85,10 @@ CREATE TABLE "Division" (
 -- CreateTable
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
     "dateOfBirth" TIMESTAMP(3) NOT NULL,
     "admissionDate" TIMESTAMP(3) NOT NULL,
-    "rollNumber" TEXT NOT NULL,
+    "rollNumber" VARCHAR(20) NOT NULL,
     "currentStandardId" TEXT NOT NULL,
     "currentDivisionId" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL,
@@ -100,6 +101,7 @@ CREATE TABLE "Student" (
 -- CreateTable
 CREATE TABLE "TimetableSlot" (
     "id" TEXT NOT NULL,
+    "tenantId" TEXT NOT NULL,
     "divisionId" TEXT NOT NULL,
     "dayOfWeek" TEXT NOT NULL,
     "periodNumber" INTEGER NOT NULL,
@@ -135,7 +137,10 @@ CREATE UNIQUE INDEX "Teacher_email_key" ON "Teacher"("email");
 CREATE UNIQUE INDEX "Standard_level_tenantId_key" ON "Standard"("level", "tenantId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Division_name_standardId_key" ON "Division"("name", "standardId");
+CREATE UNIQUE INDEX "Division_name_standardId_tenantId_key" ON "Division"("name", "standardId", "tenantId");
+
+-- CreateIndex
+CREATE INDEX "Student_currentStandardId_currentDivisionId_idx" ON "Student"("currentStandardId", "currentDivisionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_rollNumber_tenantId_key" ON "Student"("rollNumber", "tenantId");
@@ -162,6 +167,9 @@ ALTER TABLE "Standard" ADD CONSTRAINT "Standard_tenantId_fkey" FOREIGN KEY ("ten
 ALTER TABLE "Division" ADD CONSTRAINT "Division_standardId_fkey" FOREIGN KEY ("standardId") REFERENCES "Standard"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Division" ADD CONSTRAINT "Division_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Division" ADD CONSTRAINT "Division_classTeacherId_fkey" FOREIGN KEY ("classTeacherId") REFERENCES "Teacher"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -172,6 +180,9 @@ ALTER TABLE "Student" ADD CONSTRAINT "Student_currentStandardId_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_currentDivisionId_fkey" FOREIGN KEY ("currentDivisionId") REFERENCES "Division"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TimetableSlot" ADD CONSTRAINT "TimetableSlot_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TimetableSlot" ADD CONSTRAINT "TimetableSlot_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "Division"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

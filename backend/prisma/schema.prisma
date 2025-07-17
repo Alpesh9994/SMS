@@ -39,6 +39,8 @@ model Tenant {
   teachers  Teacher[]
   standards Standard[]
   students  Student[]
+  timetableSlots TimetableSlot[]
+  divisions Division[]
 }
 
 model User {
@@ -63,9 +65,9 @@ model Subject {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tenant          Tenant          @relation(fields: [tenantId], references: [id])
-  teachers        Teacher[]       @relation("TeacherSubjects")
-  timetableSlots  TimetableSlot[]
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  teachers       Teacher[]       @relation("TeacherSubjects")
+  timetableSlots TimetableSlot[]
 
   @@unique([name, tenantId])
 }
@@ -79,19 +81,19 @@ model Teacher {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tenant          Tenant          @relation(fields: [tenantId], references: [id])
-  subjects        Subject[]       @relation("TeacherSubjects")
-  classDivisions  Division[]      @relation("ClassTeacher")
-  timetableSlots  TimetableSlot[]
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  subjects       Subject[]       @relation("TeacherSubjects")
+  classDivisions Division[]      @relation("ClassTeacher")
+  timetableSlots TimetableSlot[]
 }
 
 model Standard {
-  id          String   @id @default(uuid())
-  level       Int      // 1-12
-  category    String   // Primary, Middle, High
-  tenantId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  level     Int // 1-12
+  category  String // Primary, Middle, High
+  tenantId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   tenant    Tenant     @relation(fields: [tenantId], references: [id])
   divisions Division[]
@@ -102,53 +104,59 @@ model Standard {
 
 model Division {
   id              String   @id @default(uuid())
-  name            String   // A, B, C, D, etc.
+  name            String // A, B, C, D, etc.
   studentCapacity Int
   standardId      String
+  tenantId        String
   classTeacherId  String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  standard        Standard        @relation(fields: [standardId], references: [id])
-  classTeacher    Teacher?        @relation("ClassTeacher", fields: [classTeacherId], references: [id])
-  students        Student[]
-  timetableSlots  TimetableSlot[]
+  standard       Standard        @relation(fields: [standardId], references: [id])
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  classTeacher   Teacher?        @relation("ClassTeacher", fields: [classTeacherId], references: [id])
+  students       Student[]
+  timetableSlots TimetableSlot[]
 
-  @@unique([name, standardId])
+  @@unique([name, standardId, tenantId])
 }
 
 model Student {
-  id                  String    @id @default(uuid())
-  name                String
-  dateOfBirth         DateTime
-  admissionDate       DateTime
-  rollNumber          String
-  currentStandardId   String
-  currentDivisionId   String
-  tenantId            String
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                String   @id @default(uuid())
+  name              String   @db.VarChar(100)
+  dateOfBirth       DateTime
+  admissionDate     DateTime
+  rollNumber        String   @db.VarChar(20)
+  currentStandardId String
+  currentDivisionId String
+  tenantId          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  tenant            Tenant   @relation(fields: [tenantId], references: [id])
-  currentStandard   Standard @relation(fields: [currentStandardId], references: [id])
-  currentDivision   Division @relation(fields: [currentDivisionId], references: [id])
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  currentStandard Standard @relation(fields: [currentStandardId], references: [id])
+  currentDivision Division @relation(fields: [currentDivisionId], references: [id])
 
   @@unique([rollNumber, tenantId])
+  @@index([currentStandardId, currentDivisionId])
 }
 
 model TimetableSlot {
   id           String   @id @default(uuid())
+  tenantId     String
   divisionId   String
-  dayOfWeek    String   // Monday, Tuesday, etc.
+  dayOfWeek    String
   periodNumber Int
   startTime    String
   endTime      String
-  duration     Int      // in minutes (30, 45, 60, etc.)
+  duration     Int
   subjectId    String
   teacherId    String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // Relations
+  tenant   Tenant   @relation(fields: [tenantId], references: [id])
   division Division @relation(fields: [divisionId], references: [id])
   subject  Subject  @relation(fields: [subjectId], references: [id])
   teacher  Teacher  @relation(fields: [teacherId], references: [id])

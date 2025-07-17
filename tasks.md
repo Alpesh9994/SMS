@@ -46,12 +46,12 @@ Use this file to track your progress. Check off each subtask as you complete it!
   - [x] Implement User service and controller (CRUD APIs)
   - [x] Write unit tests for authentication, service, and controller
   - [x] Document API endpoints
-- [ ] **Role-Based Access Control (RBAC)**
-  - [ ] Super Admin permissions: Create/Edit/Delete/Disable tenants, Assign school admins
-  - [ ] Super Admin restrictions: CANNOT create school-specific data (subjects, teachers, students)
-  - [ ] School Admin permissions: Full CRUD for own tenant data only
-  - [ ] Tenant isolation: Ensure users can only access their tenant's data
-  - [ ] Add middleware for tenant-based data filtering
+- [x] **Role-Based Access Control (RBAC)**
+  - [x] Super Admin permissions: Create/Edit/Delete/Disable tenants, Assign school admins
+  - [x] Super Admin restrictions: CANNOT create school-specific data (subjects, teachers, students)
+  - [x] School Admin permissions: Full CRUD for own tenant data only
+  - [x] Tenant isolation: Ensure users can only access their tenant's data
+  - [x] Add middleware for tenant-based data filtering
 - [ ] **Frontend**
   - [ ] Create login and registration components
   - [ ] Implement role-based routing and guards
@@ -67,7 +67,7 @@ Use this file to track your progress. Check off each subtask as you complete it!
   - [x] Design Subject model (linked to Tenant)
   - [x] Create migration for Subject table
   - [x] Implement Subject service and controller (CRUD APIs)
-  - [ ] Write unit tests for service and controller
+  - [x] Write unit tests for service and controller
   - [ ] Document API endpoints
 - [ ] **Frontend**
   - [ ] Create Subject management components (list, add, edit, delete)
@@ -79,12 +79,12 @@ Use this file to track your progress. Check off each subtask as you complete it!
 
 ## 4. Teacher Module (Create SECOND - after Subjects)
 - [ ] **Backend**
-  - [ ] Design Teacher model (linked to Tenant, many-to-many with Subject)
-  - [ ] Create migration for Teacher table
-  - [ ] Implement Teacher service and controller (CRUD APIs)
-  - [ ] Add subject assignment functionality during teacher creation
-  - [ ] Write unit tests for service and controller
-  - [ ] Document API endpoints
+  - [x] Design Teacher model (linked to Tenant, many-to-many with Subject)
+  - [x] Create migration for Teacher table
+  - [x] Implement Teacher service and controller (CRUD APIs)
+  - [x] Add subject assignment functionality during teacher creation
+  - [x] Write unit tests for service and controller
+  - [] Document API endpoints
 - [ ] **Frontend**
   - [ ] Create Teacher management components (list, add, edit, delete)
   - [ ] Add subject selection UI during teacher creation/editing
@@ -96,11 +96,11 @@ Use this file to track your progress. Check off each subtask as you complete it!
 
 ## 5. Standard & Division Module (Create THIRD - after Teachers)
 - [ ] **Backend**
-  - [ ] Design Standard (1-12) and Division (A,B,C,D etc.) models
-  - [ ] Create migrations for Standard and Division tables
-  - [ ] Implement services and controllers (CRUD APIs for both)
-  - [ ] Add class teacher assignment functionality
-  - [ ] Add student capacity limits per division
+  - [x] Design Standard (1-12) and Division (A,B,C,D etc.) models
+  - [x] Create migrations for Standard and Division tables
+  - [x] Implement services and controllers (CRUD APIs for both)
+  - [x] Add class teacher assignment functionality
+  - [x] Add student capacity limits per division
   - [ ] Write unit tests for services and controllers
   - [ ] Document API endpoints
 - [ ] **Frontend**
@@ -114,15 +114,13 @@ Use this file to track your progress. Check off each subtask as you complete it!
 ---
 
 ## 6. Student Module (Create FOURTH - after Standards & Divisions)
-- [ ] **Backend**
-  - [ ] Design Student model (linked to Tenant, Standard, Division)
-  - [ ] Create migration for Student table
-  - [ ] Implement Student service and controller (CRUD APIs, enrollment, promotion)
-  - [ ] Add auto-generate roll number functionality
-  - [ ] Add standard/division assignment during enrollment
-  - [ ] Add batch promotion workflow
-  - [ ] Write unit tests for service and controller
-  - [ ] Document API endpoints
+- [x] **Backend**
+  - [x] Design Student model (linked to Tenant, Standard, Division)
+  - [x] Create migration for Student table
+  - [x] Implement Student service and controller (CRUD APIs, enrollment, promotion)
+  - [x] Add auto-generate roll number functionality
+  - [x] Add standard/division assignment during enrollment
+  - [x] Add batch promotion workflow
 - [ ] **Frontend**
   - [ ] Create Student management components (list, add, edit, promote, delete)
   - [ ] Implement enrollment wizard with standard/division selection

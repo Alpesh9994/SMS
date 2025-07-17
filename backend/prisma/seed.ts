@@ -156,6 +156,121 @@ async function main() {
     }
   });
 
+  // Create teachers for Adarsh School
+  const teacher1 = await prisma.teacher.create({
+    data: {
+      name: 'John Smith',
+      email: 'john1.smith@adarsh.edu',
+      tenantId: tenant1.id
+    }
+  });
+
+  const teacher2 = await prisma.teacher.create({
+    data: {
+      name: 'Sarah Johnson',
+      email: 'sarah1.johnson@adarsh.edu',
+      tenantId: tenant1.id
+    }
+  });
+
+   // Create standards for Adarsh School
+   const standard1 = await prisma.standard.create({
+    data: {
+      level: 1,
+      category: 'Primary',
+      tenantId: tenant1.id
+    }
+  });
+
+  const standard2 = await prisma.standard.create({
+    data: {
+      level: 2,
+      category: 'Primary',
+      tenantId: tenant1.id
+    }
+  });
+
+
+  // add division
+  const division1 = await prisma.division.create({
+    data: {
+      name: 'A',
+      studentCapacity: 30,
+      standardId: standard1.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const division2 = await prisma.division.create({
+    data: {
+      name: 'B',
+      studentCapacity: 30,
+      standardId: standard1.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const division3 = await prisma.division.create({
+    data: {
+      name: 'C',
+      studentCapacity: 30,
+      standardId: standard1.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const division4 = await prisma.division.create({
+    data: {
+      name: 'A',
+      studentCapacity: 30,
+      standardId: standard2.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const division5 = await prisma.division.create({
+    data: {
+      name: 'B',
+      studentCapacity: 30,
+      standardId: standard2.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const division6 = await prisma.division.create({
+    data: {
+      name: 'C',
+      studentCapacity: 30,
+      standardId: standard2.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  // now add students
+  const student1 = await prisma.student.create({
+    data: {
+      name: 'John Doe',
+      dateOfBirth: new Date("2005-01-15"),
+      admissionDate: new Date("2024-08-01"),
+      rollNumber: '10-A-001',
+      currentStandardId: standard1.id,
+      currentDivisionId: division1.id,
+      tenantId: tenant1.id
+    }
+  });
+
+  const student2 = await prisma.student.create({
+    data: {
+      name: 'Alpesh Desai',
+      dateOfBirth: new Date("2005-01-15"),
+      admissionDate: new Date("2024-08-01"),
+      rollNumber: '10-A-002',
+      currentStandardId: standard1.id,
+      currentDivisionId: division1.id,
+      tenantId: tenant1.id
+    }
+  });
+
   // Note: Teachers, Standards, Divisions, Students, and Timetable Slots
   // will be created through the application UI following the workflow:
   // Subject → Teacher → Standard & Division → Student → Timetable

@@ -2,7 +2,9 @@ import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from "class-validato
 
 export enum Role {
     SUPER_ADMIN = 'SUPER_ADMIN',
-    SCHOOL_ADMIN = 'SCHOOL_ADMIN'
+    SCHOOL_ADMIN = 'SCHOOL_ADMIN',
+    TEACHER = 'TEACHER',
+    STUDENT = 'STUDENT'
 }
 
 export class CreateUserDto {

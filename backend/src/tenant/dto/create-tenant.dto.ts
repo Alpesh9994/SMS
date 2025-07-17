@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsBoolean } from 'class-validator';
 
 export class CreateTenantDto {
   @IsString()
@@ -16,4 +16,8 @@ export class CreateTenantDto {
 
   @IsOptional()
   config?: object;
-} 
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}

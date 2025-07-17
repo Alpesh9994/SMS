@@ -41,21 +41,33 @@ The website should have a modern, clean, and visually soothing design. Use a min
 7. Connect frontend to backend APIs.
 8. Write unit tests for components and services.
 
-### Step 3: Core Features (Iterative)
+### Step 3: Core Features (Sequential Workflow)
+
+#### **Role-Based Permissions:**
+- **Super Admin:** Can ONLY create/edit/delete/disable tenants and assign school admins. CANNOT create school-specific data.
+- **School Admin:** Full CRUD for own tenant data only (subjects, teachers, students, timetables).
+
+#### **Data Creation Workflow (Must Follow This Order):**
+1. **Subjects** → Create first (required for teacher assignment)
+2. **Teachers** → Create second (assign subjects during creation)
+3. **Standards & Divisions** → Create third (STD 1-12, divisions A/B/C/D, assign class teachers, set student capacity)
+4. **Students** → Create fourth (assign to standard/division, auto-generate roll numbers)
+5. **Timetable** → Create last (requires all above components)
+
+#### **Detailed Features:**
 - **Tenant Onboarding (Super Admin):**
   - CRUD for school tenants (name, address, logo, admin email).
-- **User Management (School Admin):**
-  - CRUD for teachers, students, and user credentials.
-  - Role-based permissions per school.
-- **Class & Division Configuration:**
-  - Predefined standards (STD 1–12), grouped (Primary, Middle, High).
-  - Multiple divisions per standard; set capacity; assign class teacher.
-- **Enrollment:**
-  - New admission workflow: student profile, assign standard/division, auto roll number.
-  - Promotion workflow: move students to next standard, reassign roll numbers.
+  - Assign school admins to tenants.
+- **School Management (School Admin):**
+  - Subject management with codes and descriptions.
+  - Teacher management with subject assignments.
+  - Standard/Division setup with class teacher assignment and capacity limits.
+  - Student enrollment with auto roll number generation.
+  - Batch promotion workflows.
 - **Timetable Builder:**
-  - Define period slots, assign subjects/teachers/rooms per standard/division.
-  - Editable period duration, number of periods, break slots.
+  - Configurable period duration (30/45/60 minutes with more options).
+  - Set number of periods per day and break slots.
+  - Assign subjects/teachers to period slots per division.
 
 ### Step 4: Testing
 - Write unit tests for backend (NestJS, Jest).

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsBoolean } from 'class-validator';
 
 export class UpdateTenantDto {
   @IsOptional()
@@ -18,5 +18,9 @@ export class UpdateTenantDto {
   adminEmail?: string;
 
   @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
   config?: object;
-} 
+}

@@ -30,12 +30,15 @@ model Tenant {
   logo       String?
   adminEmail String
   config     Json?
+  isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  users    User[]
-  subjects Subject[]
-  teachers Teacher[]
+  users     User[]
+  subjects  Subject[]
+  teachers  Teacher[]
+  standards Standard[]
+  students  Student[]
 }
 
 model User {
@@ -52,25 +55,103 @@ model User {
 }
 
 model Subject {
+  id          String   @id @default(uuid())
+  name        String
+  code        String?
+  description String?
+  tenantId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant          Tenant          @relation(fields: [tenantId], references: [id])
+  teachers        Teacher[]       @relation("TeacherSubjects")
+  timetableSlots  TimetableSlot[]
+
+  @@unique([name, tenantId])
+}
+
+model Teacher {
   id        String   @id @default(uuid())
-  name      String   @unique
-  code      String?
+  name      String
+  email     String   @unique
+  phone     String?
   tenantId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-  teachers Teacher[] @relation("TeacherSubjects")
+  tenant          Tenant          @relation(fields: [tenantId], references: [id])
+  subjects        Subject[]       @relation("TeacherSubjects")
+  classDivisions  Division[]      @relation("ClassTeacher")
+  timetableSlots  TimetableSlot[]
 }
 
-model Teacher {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
-  tenantId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Standard {
+  id          String   @id @default(uuid())
+  level       Int      // 1-12
+  category    String   // Primary, Middle, High
+  tenantId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-  subjects Subject[] @relation("TeacherSubjects")
+  tenant    Tenant     @relation(fields: [tenantId], references: [id])
+  divisions Division[]
+  students  Student[]
+
+  @@unique([level, tenantId])
+}
+
+model Division {
+  id              String   @id @default(uuid())
+  name            String   // A, B, C, D, etc.
+  studentCapacity Int
+  standardId      String
+  classTeacherId  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  standard        Standard        @relation(fields: [standardId], references: [id])
+  classTeacher    Teacher?        @relation("ClassTeacher", fields: [classTeacherId], references: [id])
+  students        Student[]
+  timetableSlots  TimetableSlot[]
+
+  @@unique([name, standardId])
+}
+
+model Student {
+  id                  String    @id @default(uuid())
+  name                String
+  dateOfBirth         DateTime
+  admissionDate       DateTime
+  rollNumber          String
+  currentStandardId   String
+  currentDivisionId   String
+  tenantId            String
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  tenant            Tenant   @relation(fields: [tenantId], references: [id])
+  currentStandard   Standard @relation(fields: [currentStandardId], references: [id])
+  currentDivision   Division @relation(fields: [currentDivisionId], references: [id])
+
+  @@unique([rollNumber, tenantId])
+}
+
+model TimetableSlot {
+  id           String   @id @default(uuid())
+  divisionId   String
+  dayOfWeek    String   // Monday, Tuesday, etc.
+  periodNumber Int
+  startTime    String
+  endTime      String
+  duration     Int      // in minutes (30, 45, 60, etc.)
+  subjectId    String
+  teacherId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  division Division @relation(fields: [divisionId], references: [id])
+  subject  Subject  @relation(fields: [subjectId], references: [id])
+  teacher  Teacher  @relation(fields: [teacherId], references: [id])
+
+  @@unique([divisionId, dayOfWeek, periodNumber])
 }

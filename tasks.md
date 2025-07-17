@@ -2,6 +2,17 @@
 
 +> **Design Guideline:** All UI/UX should be modern, clean, minimal, and visually soothing. Use soft blues/greens/pastels, lots of white space, rounded elements, subtle shadows, smooth transitions, and elegant, readable typography.
 
+## 📋 **Data Creation Workflow (Sequential Order)**
+1. **Subjects** → Create first (required for teachers)
+2. **Teachers** → Create second (assign subjects, required for class teachers)
+3. **Standards & Divisions** → Create third (assign class teachers, set capacity)
+4. **Students** → Create fourth (assign to standard/division)
+5. **Timetable** → Create last (requires all above components)
+
+## 🔐 **Role-Based Permissions**
+- **Super Admin**: Create/Edit/Delete/Disable tenants, Assign school admins only
+- **School Admin**: Full CRUD for own school data only (subjects, teachers, students, etc.)
+
 Use this file to track your progress. Check off each subtask as you complete it!
 
 ---
@@ -25,25 +36,33 @@ Use this file to track your progress. Check off each subtask as you complete it!
 
 ---
 
-## 2. Admin (User) Module
-- [ ] **Backend**
-  - [x] Design User model (with roles: Super Admin, School Admin, etc.)
+## 2. User (Admin) Module
+- [x] **Backend**
+  - [x] Design User model with roles (Super Admin, School Admin, Teacher, Student)
   - [x] Create migration for User table
-  - [x] Implement authentication (JWT)
-  - [x] Implement role-based guards
+  - [x] Implement JWT authentication with bcrypt password hashing
+  - [x] Implement role-based guards and decorators (@Roles)
+  - [x] Create public route decorator (@Public)
   - [x] Implement User service and controller (CRUD APIs)
-  - [ ] Write unit tests for authentication, service, and controller
-  - [ ] Document API endpoints
+  - [x] Write unit tests for authentication, service, and controller
+  - [x] Document API endpoints
+- [ ] **Role-Based Access Control (RBAC)**
+  - [ ] Super Admin permissions: Create/Edit/Delete/Disable tenants, Assign school admins
+  - [ ] Super Admin restrictions: CANNOT create school-specific data (subjects, teachers, students)
+  - [ ] School Admin permissions: Full CRUD for own tenant data only
+  - [ ] Tenant isolation: Ensure users can only access their tenant's data
+  - [ ] Add middleware for tenant-based data filtering
 - [ ] **Frontend**
   - [ ] Create login and registration components
   - [ ] Implement role-based routing and guards
-  - [ ] Create Admin dashboard
+  - [ ] Create Super Admin dashboard (tenant management only)
+  - [ ] Create School Admin dashboard (full school management)
   - [ ] Write unit tests for components and services
   - [ ] Document UI workflows
 
 ---
 
-## 3. Subject Module
+## 3. Subject Module (Create FIRST in workflow)
 - [x] **Backend**
   - [x] Design Subject model (linked to Tenant)
   - [x] Create migration for Subject table
@@ -58,62 +77,80 @@ Use this file to track your progress. Check off each subtask as you complete it!
 
 ---
 
-## 4. Teacher Module
+## 4. Teacher Module (Create SECOND - after Subjects)
 - [ ] **Backend**
   - [ ] Design Teacher model (linked to Tenant, many-to-many with Subject)
   - [ ] Create migration for Teacher table
   - [ ] Implement Teacher service and controller (CRUD APIs)
+  - [ ] Add subject assignment functionality during teacher creation
   - [ ] Write unit tests for service and controller
   - [ ] Document API endpoints
 - [ ] **Frontend**
   - [ ] Create Teacher management components (list, add, edit, delete)
+  - [ ] Add subject selection UI during teacher creation/editing
   - [ ] Connect to backend APIs
   - [ ] Write unit tests for components and services
   - [ ] Document UI workflows
 
 ---
 
-## 5. Classes & Division Module
+## 5. Standard & Division Module (Create THIRD - after Teachers)
 - [ ] **Backend**
-  - [ ] Design Standard (Class) and Division models
+  - [ ] Design Standard (1-12) and Division (A,B,C,D etc.) models
   - [ ] Create migrations for Standard and Division tables
   - [ ] Implement services and controllers (CRUD APIs for both)
+  - [ ] Add class teacher assignment functionality
+  - [ ] Add student capacity limits per division
   - [ ] Write unit tests for services and controllers
   - [ ] Document API endpoints
 - [ ] **Frontend**
-  - [ ] Create Class and Division management components
-  - [ ] Add UI for assigning class teachers and setting division capacity
+  - [ ] Create Standard and Division management components
+  - [ ] Add UI for assigning class teachers from existing teachers
+  - [ ] Add UI for setting division student capacity limits
   - [ ] Connect to backend APIs
   - [ ] Write unit tests for components and services
   - [ ] Document UI workflows
 
 ---
 
-## 6. Student Module
+## 6. Student Module (Create FOURTH - after Standards & Divisions)
 - [ ] **Backend**
   - [ ] Design Student model (linked to Tenant, Standard, Division)
   - [ ] Create migration for Student table
   - [ ] Implement Student service and controller (CRUD APIs, enrollment, promotion)
+  - [ ] Add auto-generate roll number functionality
+  - [ ] Add standard/division assignment during enrollment
+  - [ ] Add batch promotion workflow
   - [ ] Write unit tests for service and controller
   - [ ] Document API endpoints
 - [ ] **Frontend**
   - [ ] Create Student management components (list, add, edit, promote, delete)
-  - [ ] Implement enrollment and promotion workflows
+  - [ ] Implement enrollment wizard with standard/division selection
+  - [ ] Add auto roll number generation display
+  - [ ] Implement batch promotion workflows
   - [ ] Connect to backend APIs
   - [ ] Write unit tests for components and services
   - [ ] Document UI workflows
 
 ---
 
-## 7. Timetable Module
+## 7. Timetable Module (Create LAST - after all other modules)
 - [ ] **Backend**
   - [ ] Design TimetableSlot model (linked to Division, Teacher, Subject)
   - [ ] Create migration for TimetableSlot table
+  - [ ] Implement configurable period duration (30/45/60 minutes with more options)
+  - [ ] Add period number and break slot configuration
   - [ ] Implement Timetable service and controller (CRUD APIs)
   - [ ] Write unit tests for service and controller
   - [ ] Document API endpoints
+- [ ] **Admin Configurables**
+  - [ ] Set number of periods per day
+  - [ ] Configure break slots between periods
+  - [ ] Set different period durations for different schools
 - [ ] **Frontend**
   - [ ] Create Timetable builder UI (drag-and-drop or form-based)
+  - [ ] Add period configuration interface for admins
+  - [ ] Add break slot management UI
   - [ ] Connect to backend APIs
   - [ ] Write unit tests for components and services
   - [ ] Document UI workflows

@@ -44,6 +44,16 @@ export class StandardController {
     return this.standardService.findOne(id, tenantId);
   }
 
+  @Get(':id/divisions/schedule')
+  @ApiOperation({ summary: 'Get all divisions with their timetables for a standard' })
+  @ApiResponse({ status: 200, description: 'Divisions with schedules retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Standard not found' })
+  async getDivisionsWithSchedule(@Param('id') id: string, @Request() req) {
+    const tenantId = req.user?.tenantId;
+    if (!tenantId) throw new ForbiddenException('No tenant context');
+    return this.standardService.getDivisionsWithSchedule(id, tenantId);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update a standard' })
   @ApiResponse({ status: 200, description: 'Standard updated successfully' })

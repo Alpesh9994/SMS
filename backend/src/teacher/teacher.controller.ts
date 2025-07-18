@@ -44,6 +44,16 @@ export class TeacherController {
     return this.teacherService.findOne(id, tenantId);
   }
 
+  @Get(':id/schedule')
+  @ApiOperation({ summary: 'Get teacher timetable schedule' })
+  @ApiResponse({ status: 200, description: 'Teacher schedule retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Teacher not found' })
+  async getTeacherSchedule(@Param('id') id: string, @Request() req) {
+    const tenantId = req.user?.tenantId;
+    if (!tenantId) throw new ForbiddenException('No tenant context');
+    return this.teacherService.getTeacherSchedule(id, tenantId);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update a teacher and their subject assignments' })
   @ApiResponse({ status: 200, description: 'Teacher updated successfully' })

@@ -2,6 +2,7 @@ import { ConflictException, ForbiddenException, Injectable, NotFoundException } 
 import { CreateStandardDto } from './dto/create-standard.dto';
 import { UpdateStandardDto } from './dto/update-standard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DayOfWeek } from '@prisma/client';
 
 @Injectable()
 export class StandardService {
@@ -189,4 +190,80 @@ export class StandardService {
     
     return this.prisma.standard.delete({ where: { id } });
   }
+
+  async getDivisionsWithSchedule(id: string, tenantId?: string) {
+    const standard = await this.prisma.standard.findUnique({
+      where: { id },
+      include: {
+        divisions: {
+          include: {
+            classTeacher: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            },
+            timetableSlots: {
+              include: {
+                subject: {
+                  select: {
+                    id: true,
+                    name: true,
+                    code: true
+                  }
+                },
+                teacher: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true
+                  }
+                }
+              },
+              orderBy: [
+                { dayOfWeek: 'asc' },
+                { periodNumber: 'asc' }
+              ]
+            }
+          }
+        }
+      }
+    });
+
+    if (!standard) {
+      throw new NotFoundException('Standard not found');
+    }
+
+    if (tenantId && standard.tenantId !== tenantId) {
+      throw new ForbiddenException('Access to this standard is forbidden');
+    }
+
+    // Transform the data to group timetable slots by division and day
+    const divisionsWithSchedule = standard.divisions.map(division => {
+      const scheduleByDay = Object.values(DayOfWeek).map(day => ({
+        day,
+        slots: division.timetableSlots
+          .filter(slot => slot.dayOfWeek === day)
+          .sort((a, b) => a.periodNumber - b.periodNumber)
+      }));
+
+      return {
+        id: division.id,
+        name: division.name,
+        classTeacher: division.classTeacher,
+        schedule: scheduleByDay
+      };
+    });
+
+    return {
+      standardInfo: {
+        id: standard.id,
+        level: standard.level,
+        category: standard.category
+      },
+      divisions: divisionsWithSchedule
+    };
+  }
+
 }

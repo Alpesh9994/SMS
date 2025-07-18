@@ -27,15 +27,9 @@ export class DivisionController {
   @Get()
   @ApiOperation({ summary: 'Get all divisions for the tenant' })
   @ApiResponse({ status: 200, description: 'Divisions retrieved successfully' })
-  @ApiQuery({ name: 'standardId', required: false, description: 'Filter by standard ID' })
   async findAll(@Request() req, @Query('standardId') standardId?: string) {
     const tenantId = req.user?.tenantId;
     if (!tenantId) throw new ForbiddenException('No tenant context');
-    
-    if (standardId) {
-      return this.divisionService.findByStandard(standardId, tenantId);
-    }
-    
     return this.divisionService.findAll(tenantId);
   }
 
@@ -47,6 +41,26 @@ export class DivisionController {
     const tenantId = req.user?.tenantId;
     if (!tenantId) throw new ForbiddenException('No tenant context');
     return this.divisionService.findOne(id, tenantId);
+  }
+
+  @Get(':id/schedule')
+  @ApiOperation({ summary: 'Get division timetable schedule' })
+  @ApiResponse({ status: 200, description: 'Division schedule retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Division not found' })
+  async getDivisionSchedule(@Param('id') id: string, @Request() req) {
+    const tenantId = req.user?.tenantId;
+    if (!tenantId) throw new ForbiddenException('No tenant context');
+    return this.divisionService.getDivisionSchedule(id, tenantId);
+  }
+
+  @Get('standard/:standardId')
+  @ApiOperation({ summary: 'Get all divisions for a specific standard' })
+  @ApiResponse({ status: 200, description: 'Divisions retrieved successfully' })
+  @ApiResponse({ status: 403, description: 'Standard does not belong to tenant' })
+  async findByStandard(@Param('standardId') standardId: string, @Request() req) {
+    const tenantId = req.user?.tenantId;
+    if (!tenantId) throw new ForbiddenException('No tenant context');
+    return this.divisionService.findByStandard(standardId, tenantId);
   }
 
   @Patch(':id')

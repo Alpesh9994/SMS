@@ -14,6 +14,7 @@ import { TeacherModule } from './teacher/teacher.module';
 import { StandardModule } from './standard/standard.module';
 import { DivisionModule } from './division/division.module';
 import { StudentModule } from './student/student.module';
+import { TimeTableModule } from './time-table/time-table.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { StudentModule } from './student/student.module';
     StandardModule, 
     DivisionModule,
     StudentModule,
+    TimeTableModule,
   ],
   controllers: [AppController],
   providers: [

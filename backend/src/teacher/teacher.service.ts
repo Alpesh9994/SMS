@@ -32,7 +32,8 @@ export class TeacherService {
       },
       include: {
         subjects: true,
-        classDivisions: true
+        classDivisions: true,
+        timetableSlots: true,
       }
     });
   }
@@ -46,7 +47,8 @@ export class TeacherService {
           include: {
             standard: true
           }
-        }
+        },
+        timetableSlots: true,
       }
     });
   }
@@ -60,7 +62,8 @@ export class TeacherService {
           include: {
             standard: true
           }
-        }
+        },
+        timetableSlots: true,
       }
     });
     
@@ -118,7 +121,8 @@ export class TeacherService {
           include: {
             standard: true
           }
-        }
+        },
+        timetableSlots: true,
       }
     });
   }
@@ -135,5 +139,37 @@ export class TeacherService {
     }
     
     return this.prisma.teacher.delete({ where: { id } });
+  }
+
+  async getTeacherSchedule(id: string, tenantId: string) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: { id },
+      include: {
+        timetableSlots: {
+          include: {
+            division: {
+              include: {
+                standard: true
+              }
+            },
+            subject: true
+          },
+          orderBy: [
+            { dayOfWeek: 'asc' },
+            { periodNumber: 'asc' }
+          ]
+        }
+      }
+    });
+
+    if (!teacher) {
+      throw new NotFoundException('Teacher not found');
+    }
+
+    if (tenantId && teacher.tenantId !== tenantId) {
+      throw new ForbiddenException('Access to this teacher is forbidden');
+    }
+
+    return teacher.timetableSlots;
   }
 }

@@ -21,6 +21,16 @@ enum Role {
   STUDENT
 }
 
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 // models
 
 model Tenant {
@@ -41,6 +51,7 @@ model Tenant {
   students  Student[]
   timetableSlots TimetableSlot[]
   divisions Division[]
+  timeTableConfigs TimeTableConfig[]
 }
 
 model User {
@@ -145,11 +156,11 @@ model TimetableSlot {
   id           String   @id @default(uuid())
   tenantId     String
   divisionId   String
-  dayOfWeek    String
-  periodNumber Int
+  dayOfWeek    DayOfWeek
+  periodNumber Int @db.SmallInt
   startTime    String
   endTime      String
-  duration     Int
+  duration     Int @db.SmallInt
   subjectId    String
   teacherId    String
   createdAt    DateTime @default(now())
@@ -162,4 +173,20 @@ model TimetableSlot {
   teacher  Teacher  @relation(fields: [teacherId], references: [id])
 
   @@unique([divisionId, dayOfWeek, periodNumber])
+  @@index([tenantId])
+}
+
+
+model TimeTableConfig {
+  id             String   @id @default(uuid())
+  tenantId       String   @unique
+  periodsPerDay  Int      @db.SmallInt
+  defaultDuration Int     @db.SmallInt
+  startTime      String   // School day start time
+  endTime        String   // School day end time
+  breakSlots     Json[]   // Array of break slots
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 }

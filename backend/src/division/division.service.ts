@@ -2,6 +2,7 @@ import { ConflictException, ForbiddenException, Injectable, NotFoundException } 
 import { CreateDivisionDto } from './dto/create-division.dto';
 import { UpdateDivisionDto } from './dto/update-division.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DayOfWeek } from '@prisma/client';
 
 @Injectable()
 export class DivisionService {
@@ -301,5 +302,55 @@ export class DivisionService {
     }
 
     return this.prisma.division.delete({ where: { id } });
+  }
+
+  async getDivisionSchedule(id: string, tenantId: string) {
+    const division = await this.prisma.division.findUnique({
+      where: { id },
+      include: {
+        standard: true,
+        timetableSlots: {
+          include: {
+            subject: true,
+            teacher: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: [
+            { dayOfWeek: 'asc' },
+            { periodNumber: 'asc' }
+          ]
+        }
+      }
+    });
+
+    if (!division) {
+      throw new NotFoundException('Division not found');
+    }
+
+    if (tenantId && division.standard.tenantId !== tenantId) {
+      throw new ForbiddenException('Access to this division is forbidden');
+    }
+
+    // Group by day
+    const schedule = Object.values(DayOfWeek).map(day => ({
+      day,
+      slots: division.timetableSlots
+        .filter(slot => slot.dayOfWeek === day)
+        .sort((a, b) => a.periodNumber - b.periodNumber)
+    }));
+
+    return {
+      divisionInfo: {
+        id: division.id,
+        name: division.name,
+        standard: division.standard
+      },
+      schedule
+    };
   }
 }

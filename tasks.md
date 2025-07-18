@@ -134,11 +134,11 @@ Use this file to track your progress. Check off each subtask as you complete it!
 
 ## 7. Timetable Module (Create LAST - after all other modules)
 - [ ] **Backend**
-  - [ ] Design TimetableSlot model (linked to Division, Teacher, Subject)
-  - [ ] Create migration for TimetableSlot table
-  - [ ] Implement configurable period duration (30/45/60 minutes with more options)
-  - [ ] Add period number and break slot configuration
-  - [ ] Implement Timetable service and controller (CRUD APIs)
+  - [x] Design TimetableSlot model (linked to Division, Teacher, Subject)
+  - [x] Create migration for TimetableSlot table
+  - [x] Implement configurable period duration (30/45/60 minutes with more options)
+  - [x] Add period number and break slot configuration
+  - [x] Implement Timetable service and controller (CRUD APIs)
   - [ ] Write unit tests for service and controller
   - [ ] Document API endpoints
 - [ ] **Admin Configurables**

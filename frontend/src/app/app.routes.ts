@@ -1,10 +1,18 @@
 import { Routes } from '@angular/router';
-import { SchoolList } from './school/school-list';
-import { SchoolForm } from './school/schoolForm/school-form';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'school', pathMatch: 'full' },
-  { path: 'school', component: SchoolList },
-  { path: 'school/new', component: SchoolForm },
-  { path: 'school/:id/edit', component: SchoolForm },
+  {
+    path: 'auth',
+    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+  },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/secured/secured.routes').then(m => m.SECURED_ROUTES)
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/login'
+  }
 ];

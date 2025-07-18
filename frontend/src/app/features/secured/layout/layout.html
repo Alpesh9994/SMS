@@ -1,0 +1,78 @@
+<div class="secured-container">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="isMenuOpen = !isMenuOpen">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>School Management System</span>
+    <span class="toolbar-spacer"></span>
+    <div class="user-info">
+      <span class="user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav [opened]="isMenuOpen" mode="side">
+      <div class="nav-list">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- Super Admin Links -->
+        <ng-container *ngIf="isSuperAdmin">
+          <a routerLink="/schools" routerLinkActive="active" class="nav-item">
+            <mat-icon>school</mat-icon>
+            <span>Schools</span>
+          </a>
+        </ng-container>
+
+        <!-- School Admin Links -->
+        <ng-container *ngIf="isSchoolAdmin">
+          <a routerLink="/students" routerLinkActive="active" class="nav-item">
+            <mat-icon>people</mat-icon>
+            <span>Students</span>
+          </a>
+          <a routerLink="/teachers" routerLinkActive="active" class="nav-item">
+            <mat-icon>person</mat-icon>
+            <span>Teachers</span>
+          </a>
+          <a routerLink="/subjects" routerLinkActive="active" class="nav-item">
+            <mat-icon>book</mat-icon>
+            <span>Subjects</span>
+          </a>
+          <a routerLink="/timetable" routerLinkActive="active" class="nav-item">
+            <mat-icon>schedule</mat-icon>
+            <span>Timetable</span>
+          </a>
+          <a routerLink="/standards" routerLinkActive="active" class="nav-item">
+            <mat-icon>class</mat-icon>
+            <span>Standards</span>
+          </a>
+        </ng-container>
+
+        <a (click)="logout()" class="nav-item">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </a>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item routerLink="/profile">
+    <mat-icon>person</mat-icon>
+    <span>Profile</span>
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
